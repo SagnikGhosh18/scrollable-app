@@ -1,91 +1,97 @@
-// import { Tabs } from "expo-router";
-// import { Image, ImageSourcePropType, Text, View } from "react-native";
+import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { StyleSheet, Text } from "react-native";
+import { usePathname } from "expo-router";
 
-// const TabIcon = ({
-//   focused,
-//   icon,
-//   title,
-// }: {
-//   focused: boolean;
-//   icon: ImageSourcePropType;
-//   title: string;
-// }) => (
-//   <View className="flex-1 mt-3 flex flex-col items-center">
-//     <Image
-//       source={icon}
-//       tintColor={focused ? "#0061FF" : "#666876"}
-//       resizeMode="contain"
-//       className="size-6"
-//     />
-//     <Text
-//       className={`${
-//         focused
-//           ? "text-primary-300 font-rubik-medium"
-//           : "text-black-200 font-rubik"
-//       } text-xs w-full text-center mt-1`}
-//     >
-//       {title}
-//     </Text>
-//   </View>
-// );
-
-// const TabsLayout = () => {
-//   return (
-//     <Tabs
-//       screenOptions={{
-//         tabBarShowLabel: false,
-//         tabBarStyle: {
-//           backgroundColor: "white",
-//           position: "absolute",
-//           borderTopColor: "#0061FF1A",
-//           borderTopWidth: 1,
-//           minHeight: 70,
-//         },
-//       }}
-//     >
-//       <Tabs.Screen
-//         name="index"
-//         options={{
-//           title: "Home",
-//           headerShown: false,
-//           tabBarIcon: ({ focused }) => (
-//             <TabIcon focused={focused} icon={icons.home} title="Home" />
-//           ),
-//         }}
-//       />
-//       <Tabs.Screen
-//         name="explore"
-//         options={{
-//           title: "Explore",
-//           headerShown: false,
-//           tabBarIcon: ({ focused }) => (
-//             <TabIcon focused={focused} icon={icons.search} title="Explore" />
-//           ),
-//         }}
-//       />
-//     </Tabs>
-//   );
-// };
-
-// export default TabsLayout;
-
-import { Tabs, TabList, TabTrigger, TabSlot } from 'expo-router/ui';
-import { Text } from 'react-native';
-import FontAwesome, { SolidIcons, RegularIcons, BrandIcons } from 'react-native-fontawesome';
-
-// Defining the layout of the custom tab navigator
 export default function Layout() {
+    const currentPath = usePathname(); // Get the current route to determine the active tab
+
     return (
         <Tabs>
             <TabSlot />
-            <TabList>
-                <TabTrigger name="home" href="/">
-                    <FontAwesome icon={SolidIcons.home}/>
+            <TabList style={styles.tabList}>
+                {/* Home Tab */}
+                <TabTrigger
+                    name="home"
+                    href="/"
+                    style={[
+                        styles.tabTrigger,
+                        currentPath === "/" && styles.activeTab, // Apply active style conditionally
+                    ]}
+                >
+                    <FontAwesomeIcon
+                        icon={faHome}
+                        size={20}
+                        style={currentPath === "/" ? styles.activeIcon : styles.icon}
+                    />
+                    <Text style={currentPath === "/" ? styles.activeLabel : styles.label}>
+                        Home
+                    </Text>
                 </TabTrigger>
-                <TabTrigger name="article" href="/search">
-                    <FontAwesome />
+
+                {/* Search Tab */}
+                <TabTrigger
+                    name="search"
+                    href="/search"
+                    style={[
+                        styles.tabTrigger,
+                        currentPath === "/search" && styles.activeTab, // Apply active style conditionally
+                    ]}
+                >
+                    <FontAwesomeIcon
+                        icon={faSearch}
+                        size={20}
+                        style={currentPath === "/search" ? styles.activeIcon : styles.icon}
+                    />
+                    <Text
+                        style={
+                            currentPath === "/search" ? styles.activeLabel : styles.label
+                        }
+                    >
+                        Search
+                    </Text>
                 </TabTrigger>
             </TabList>
         </Tabs>
     );
 }
+
+const styles = StyleSheet.create({
+    tabList: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        paddingVertical: 10,
+        backgroundColor: "#f9f9f9", // Light background
+        borderTopWidth: 1, // Border at the top
+        borderColor: "#ddd", // Subtle border color
+    },
+    tabTrigger: {
+        alignItems: "center",
+        padding: 10,
+    },
+    activeTab: {
+        backgroundColor: "#e0f7fa", // Light blue background for active tab
+        borderRadius: 8, // Rounded corners for the active tab
+        padding: 10, // Add padding to enhance touch target size
+    },
+    icon: {
+        color: "#757575", // Default gray icon color
+    },
+    activeIcon: {
+        color: "#00796b", // Active tab icon color
+    },
+    label: {
+        fontSize: 12,
+        color: "#757575", // Default gray text color
+        marginTop: 5,
+    },
+    activeLabel: {
+        fontSize: 12,
+        color: "#00796b", // Active tab text color
+        fontWeight: "bold",
+        marginTop: 5,
+    },
+});
