@@ -10,31 +10,29 @@ import {
     SafeAreaView,
 } from "react-native";
 import Section from "@/components/section";
-
-interface ImageData {
-    id: string;
-    author: string;
-    width: number;
-    height: number;
-    url: string;
-    download_url: string;
-}
+import { ImageData } from "@/lib/types";
+import { fetchImages } from "@/lib/services";
 
 const Search: React.FC = () => {
     const [images, setImages] = useState<ImageData[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const fetchImages = async (): Promise<void> => {
+    const handleFetchImages = async () => {
+        if (loading) return;
+        setLoading(true);
         try {
-            const response = await fetch("https://picsum.photos/v2/list?page=1&limit=10");
-            const data: ImageData[] = await response.json();
-            setImages(data);
+            const data = await fetchImages(page);
+            setImages((prevImages) => [...prevImages, ...data]);
         } catch (error) {
             console.error("Error fetching images:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchImages();
+        handleFetchImages(); // Initial fetch
     }, []);
 
     const renderHashtagItem = ({ item }: { item: ImageData }) => (
@@ -79,6 +77,7 @@ const Search: React.FC = () => {
 
                     {/* Trending Hashtags */}
                     <Section
+                        loading={loading}
                         images={images}
                         renderItem={renderHashtagItem}
                         topic="Trending hashtags"
@@ -86,6 +85,7 @@ const Search: React.FC = () => {
 
                     {/* Top Community */}
                     <Section
+                        loading={loading}
                         images={images}
                         renderItem={renderCommunityItem}
                         topic="Top community"
@@ -93,6 +93,7 @@ const Search: React.FC = () => {
 
                     {/* Top Nomads */}
                     <Section
+                        loading={loading}
                         images={images}
                         renderItem={renderNomadItem}
                         topic="Top nomads"
@@ -141,7 +142,6 @@ const styles = StyleSheet.create({
     topSearchText: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#4DA1A9"
     },
     hashtagItem: {
         marginRight: 12,
@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
     hashtagText: {
         marginTop: 8,
         textAlign: "center",
-        color: "#4DA1A9"
     },
     communityItem: {
         marginRight: 12,
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: "center",
         fontWeight: "bold",
-        color: "#4DA1A9"
     },
     nomadItem: {
         alignItems: "center",
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
     },
     nomadName: {
         marginTop: 8,
-        color: "#4DA1A9"
+        fontSize: 8
     },
 });
 

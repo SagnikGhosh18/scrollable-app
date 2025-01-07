@@ -12,34 +12,20 @@ import {
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUser, faHeart, faComment, faShareSquare } from "@fortawesome/free-regular-svg-icons";
-
-const SCREEN_HEIGHT = Dimensions.get("window").height;
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const NAVIGATION_BAR_HEIGHT = 70; // Height of the bottom navigation bar
-const ITEM_HEIGHT = SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT; // Exact height of each FlatList item
-
-// Define the type for each image item from the API
-interface ImageItem {
-  id: string;
-  author: string;
-  width: number;
-  height: number;
-  url: string;
-  download_url: string;
-}
+import { ImageData } from "@/lib/types";
+import { ITEM_HEIGHT, SCREEN_WIDTH } from "@/lib/constants";
+import { fetchImages } from "@/lib/services";
 
 const App: React.FC = () => {
-  const [images, setImages] = useState<ImageItem[]>([]); // State for storing fetched images
-  const [page, setPage] = useState<number>(1); // Pagination state
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [images, setImages] = useState<ImageData[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Fetch images from Picsum API
-  const fetchImages = async () => {
+  const handleFetchImages = async () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await fetch(`https://picsum.photos/v2/list?page=${page}&limit=20`);
-      const data: ImageItem[] = await response.json();
+      const data = await fetchImages(page, 20);
       setImages((prevImages) => [...prevImages, ...data]);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
@@ -50,11 +36,10 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchImages();
+    handleFetchImages();
   }, []);
 
-  // Render each image item
-  const renderItem: ListRenderItem<ImageItem> = ({ item }) => (
+  const renderItem: ListRenderItem<ImageData> = ({ item }) => (
     <View style={styles.imageContainer}>
       <Image source={{ uri: item.download_url }} style={styles.image} />
       <Text style={styles.caption}>For you</Text>
@@ -85,7 +70,7 @@ const App: React.FC = () => {
         showsVerticalScrollIndicator={false}
         initialNumToRender={1}
         decelerationRate="normal"
-        onEndReached={fetchImages}
+        onEndReached={handleFetchImages}
         onEndReachedThreshold={0.5}
         ListFooterComponent={loading ? <ActivityIndicator size="large" color="#fff" /> : null}
         getItemLayout={(_, index) => ({

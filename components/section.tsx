@@ -1,20 +1,11 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import React from 'react';
+import { SectionProps } from '@/lib/types';
 
-interface ImageData {
-    id: string;
-    author: string;
-    download_url: string;
-}
-
-interface SectionProps {
-    images: ImageData[];
-    renderItem: (item: any) => JSX.Element;
-    topic: string
-}
 
 const Section = (props: SectionProps) => {
     const {
+        loading,
         images,
         renderItem,
         topic
@@ -23,14 +14,16 @@ const Section = (props: SectionProps) => {
     return (
         <>
             <Text style={styles.sectionHeading}>{topic}</Text>
-            <FlatList
-                data={images}
-                horizontal
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.horizontalList}
-            />
+            {loading ?
+                <ActivityIndicator size="large" color="black" /> :
+                <FlatList
+                    data={images}
+                    horizontal
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalList}
+                />}
         </>
     )
 }
@@ -42,6 +35,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginVertical: 8,
+        color: "#4DA1A9"
     },
     horizontalList: {
         marginBottom: 16,
