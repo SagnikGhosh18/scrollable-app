@@ -63,19 +63,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        paddingVertical: 10,
+        paddingVertical: 5,
         backgroundColor: "#f9f9f9", // Light background
         borderTopWidth: 1, // Border at the top
         borderColor: "#ddd", // Subtle border color
     },
     tabTrigger: {
         alignItems: "center",
-        padding: 10,
+        padding: 5,
     },
     activeTab: {
         backgroundColor: "#e0f7fa", // Light blue background for active tab
         borderRadius: 8, // Rounded corners for the active tab
-        padding: 10, // Add padding to enhance touch target size
+        padding: 5 // Add padding to enhance touch target size
     },
     icon: {
         color: "#757575", // Default gray icon color

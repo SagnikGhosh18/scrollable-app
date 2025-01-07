@@ -7,16 +7,20 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
+    SafeAreaView,
 } from "react-native";
 import Section from "@/components/section";
 
 interface ImageData {
     id: string;
     author: string;
+    width: number;
+    height: number;
+    url: string;
     download_url: string;
 }
 
-const App: React.FC = () => {
+const Search: React.FC = () => {
     const [images, setImages] = useState<ImageData[]>([]);
 
     const fetchImages = async (): Promise<void> => {
@@ -55,49 +59,55 @@ const App: React.FC = () => {
     );
 
     return (
-        <ScrollView style={styles.scrollContainer}>
-            <View style={styles.container}>
-                {/* Search Bar */}
-                <Text style={styles.heading}>Discover the world</Text>
-                <TextInput style={styles.searchBar} placeholder="Search" />
+        <SafeAreaView style={styles.safeArea}>
+            <ScrollView style={styles.scrollContainer}>
+                <View style={styles.container}>
+                    {/* Search Bar */}
+                    <Text style={styles.heading}>Discover the world</Text>
+                    <TextInput style={styles.searchBar} placeholder="Search" />
 
-                {/* Top Search */}
-                <View style={styles.topSearch}>
-                    {images.length > 0 && (
-                        <Image
-                            source={{ uri: images[0]?.download_url }}
-                            style={styles.topSearchImage}
-                        />
-                    )}
-                    <Text style={styles.topSearchText}>#Top search of the day</Text>
+                    {/* Top Search */}
+                    <View style={styles.topSearch}>
+                        {images.length > 0 && (
+                            <Image
+                                source={{ uri: images[0]?.download_url }}
+                                style={styles.topSearchImage}
+                            />
+                        )}
+                        <Text style={styles.topSearchText}>#Top search of the day</Text>
+                    </View>
+
+                    {/* Trending Hashtags */}
+                    <Section
+                        images={images}
+                        renderItem={renderHashtagItem}
+                        topic="Trending hashtags"
+                    />
+
+                    {/* Top Community */}
+                    <Section
+                        images={images}
+                        renderItem={renderCommunityItem}
+                        topic="Top community"
+                    />
+
+                    {/* Top Nomads */}
+                    <Section
+                        images={images}
+                        renderItem={renderNomadItem}
+                        topic="Top nomads"
+                    />
                 </View>
-
-                {/* Trending Hashtags */}
-                <Section
-                    images={images}
-                    renderItem={renderHashtagItem}
-                    topic="Trending hashtags"
-                />
-
-                {/* Top Community */}
-                <Section
-                    images={images}
-                    renderItem={renderCommunityItem}
-                    topic="Top community"
-                />
-
-                {/* Top Nomads */}
-                <Section
-                    images={images}
-                    renderItem={renderNomadItem}
-                    topic="Top nomads"
-                />
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#F9F9F9",
+    },
     scrollContainer: {
         flex: 1,
         backgroundColor: "#F9F9F9",
@@ -110,6 +120,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
+        color: "#4DA1A9"
     },
     searchBar: {
         height: 40,
@@ -130,6 +141,7 @@ const styles = StyleSheet.create({
     topSearchText: {
         fontSize: 16,
         fontWeight: "bold",
+        color: "#4DA1A9"
     },
     hashtagItem: {
         marginRight: 12,
@@ -142,6 +154,7 @@ const styles = StyleSheet.create({
     hashtagText: {
         marginTop: 8,
         textAlign: "center",
+        color: "#4DA1A9"
     },
     communityItem: {
         marginRight: 12,
@@ -155,6 +168,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: "center",
         fontWeight: "bold",
+        color: "#4DA1A9"
     },
     nomadItem: {
         alignItems: "center",
@@ -167,7 +181,8 @@ const styles = StyleSheet.create({
     },
     nomadName: {
         marginTop: 8,
+        color: "#4DA1A9"
     },
 });
 
-export default App;
+export default Search;
