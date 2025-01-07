@@ -5,19 +5,18 @@ import { StyleSheet, Text } from "react-native";
 import { usePathname } from "expo-router";
 
 export default function Layout() {
-    const currentPath = usePathname(); // Get the current route to determine the active tab
+    const currentPath = usePathname();
 
     return (
         <Tabs>
             <TabSlot />
             <TabList style={styles.tabList}>
-                {/* Home Tab */}
                 <TabTrigger
                     name="home"
                     href="/"
                     style={[
                         styles.tabTrigger,
-                        currentPath === "/" && styles.activeTab, // Apply active style conditionally
+                        currentPath === "/" && styles.activeTab,
                     ]}
                 >
                     <FontAwesomeIcon
@@ -30,13 +29,12 @@ export default function Layout() {
                     </Text>
                 </TabTrigger>
 
-                {/* Search Tab */}
                 <TabTrigger
                     name="search"
                     href="/search"
                     style={[
                         styles.tabTrigger,
-                        currentPath === "/search" && styles.activeTab, // Apply active style conditionally
+                        currentPath === "/search" && styles.activeTab,
                     ]}
                 >
                     <FontAwesomeIcon
@@ -64,33 +62,34 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "center",
         paddingVertical: 5,
-        backgroundColor: "#f9f9f9", // Light background
-        borderTopWidth: 1, // Border at the top
-        borderColor: "#ddd", // Subtle border color
+        backgroundColor: "#f9f9f9",
+        borderTopWidth: 1,
+        borderColor: "#ddd",
+        maxHeight: 60,
     },
     tabTrigger: {
         alignItems: "center",
         padding: 5,
     },
     activeTab: {
-        backgroundColor: "#e0f7fa", // Light blue background for active tab
-        borderRadius: 8, // Rounded corners for the active tab
-        padding: 5 // Add padding to enhance touch target size
+        backgroundColor: "#e0f7fa",
+        borderRadius: 8,
+        padding: 5
     },
     icon: {
-        color: "#757575", // Default gray icon color
+        color: "#757575",
     },
     activeIcon: {
-        color: "#00796b", // Active tab icon color
+        color: "#00796b",
     },
     label: {
         fontSize: 12,
-        color: "#757575", // Default gray text color
+        color: "#757575",
         marginTop: 5,
     },
     activeLabel: {
         fontSize: 12,
-        color: "#00796b", // Active tab text color
+        color: "#00796b",
         fontWeight: "bold",
         marginTop: 5,
     },

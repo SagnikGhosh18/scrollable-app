@@ -2,7 +2,7 @@ import { Dimensions } from "react-native";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const NAVIGATION_BAR_HEIGHT = 70;
+const NAVIGATION_BAR_HEIGHT = 60;
 const ITEM_HEIGHT = SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT;
 
 export {
