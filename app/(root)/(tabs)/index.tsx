@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   FlatList,
-  Dimensions,
   ActivityIndicator,
   SafeAreaView,
   ListRenderItem,
@@ -86,7 +85,7 @@ const App: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#000", // Background color to match the app theme
+    backgroundColor: "#000",
   },
   imageContainer: {
     height: ITEM_HEIGHT,
@@ -102,8 +101,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 40,
     left: 0,
-    right: 0, // Ensure it spans the entire width
-    textAlign: "center", // Center the text horizontally
+    right: 0,
+    textAlign: "center",
     color: "#fff",
     fontSize: 18,
     fontWeight: "100",

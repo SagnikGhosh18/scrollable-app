@@ -11,28 +11,32 @@ import {
 } from "react-native";
 import Section from "@/components/section";
 import { ImageData } from "@/lib/types";
-import { fetchImages } from "@/lib/services";
+import { fetchSingleImage } from "@/lib/services";
 
 const Search: React.FC = () => {
-    const [images, setImages] = useState<ImageData[]>([]);
-    const [page, setPage] = useState<number>(1);
+    const [image, setImage] = useState<ImageData>();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleFetchImages = async () => {
+    const fetchTopImage = async (): Promise<void> => {
         if (loading) return;
         setLoading(true);
         try {
-            const data = await fetchImages(page);
-            setImages((prevImages) => [...prevImages, ...data]);
+            const data: ImageData | Record<string, unknown> = await fetchSingleImage();
+
+            if ((data as ImageData).download_url) {
+                setImage(data as ImageData);
+            } else {
+                console.error("Unexpected data format:", data);
+            }
         } catch (error) {
-            console.error("Error fetching images:", error);
+            console.error("Error fetching image:", error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        handleFetchImages(); // Initial fetch
+        fetchTopImage();
     }, []);
 
     const renderHashtagItem = ({ item }: { item: ImageData }) => (
@@ -66,9 +70,9 @@ const Search: React.FC = () => {
 
                     {/* Top Search */}
                     <View style={styles.topSearch}>
-                        {images.length > 0 && (
+                        {image?.download_url && (
                             <Image
-                                source={{ uri: images[0]?.download_url }}
+                                source={{ uri: image.download_url }}
                                 style={styles.topSearchImage}
                             />
                         )}
@@ -77,24 +81,18 @@ const Search: React.FC = () => {
 
                     {/* Trending Hashtags */}
                     <Section
-                        loading={loading}
-                        images={images}
                         renderItem={renderHashtagItem}
                         topic="Trending hashtags"
                     />
 
                     {/* Top Community */}
                     <Section
-                        loading={loading}
-                        images={images}
                         renderItem={renderCommunityItem}
                         topic="Top community"
                     />
 
                     {/* Top Nomads */}
                     <Section
-                        loading={loading}
-                        images={images}
                         renderItem={renderNomadItem}
                         topic="Top nomads"
                     />

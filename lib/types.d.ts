@@ -8,8 +8,6 @@ export interface ImageData {
 }
 
 export interface SectionProps {
-  loading: boolean;
-  images: ImageData[];
   renderItem: (item: any) => JSX.Element;
   topic: string;
 }
